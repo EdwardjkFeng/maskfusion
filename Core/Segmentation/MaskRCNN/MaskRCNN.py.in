@@ -23,9 +23,9 @@ PYTHON_VE_PATH = "@MASKFUSION_PYTHON_VE_PATH@"
 MASK_RCNN_DIR = "@MASKFUSION_MASK_RCNN_DIR@"
 
 # Optionally, activate virtual environment
-if PYTHON_VE_PATH != "":
-  ve_path = os.path.join(PYTHON_VE_PATH, 'bin', 'activate_this.py')
-  exec(open(ve_path).read(), {'__file__': ve_path})
+# if PYTHON_VE_PATH != "":
+#   ve_path = os.path.join(PYTHON_VE_PATH, 'bin', 'activate_this.py')
+#   exec(open(ve_path).read(), {'__file__': ve_path})
 
 ## Optionally, select GPU # this approach did not work
 #if "@MASKFUSION_GPUS_MASKRCNN@" != "":

@@ -40,6 +40,9 @@ void MaskRCNN::initialise(){
 
     std::cout << "* Initialising MaskRCNN (thread: " << std::this_thread::get_id() << ") ..." << std::endl;
 
+    // Specify the python environment
+    Py_SetPythonHome(L"/home/jingkun/anaconda3/envs/maskfusion");
+
     Py_SetProgramName((wchar_t*)L"MaskRCNN");
     Py_Initialize();
     wchar_t const * argv2[] = { L"MaskRCNN.py" };
