@@ -29,8 +29,8 @@ MASK_RCNN_DIR = "@MASKFUSION_MASK_RCNN_DIR@"
 
 ## Optionally, select GPU # this approach did not work
 #if "@MASKFUSION_GPUS_MASKRCNN@" != "":
-#  os.environ["CUDA_VISIBLE_DEVICES"] = "@MASKFUSION_GPUS_MASKRCNN@"
-#  os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
+os.environ["CUDA_VISIBLE_DEVICES"] = "@MASKFUSION_GPUS_MASKRCNN@"
+os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 
 import sys
 sys.path.insert(0, MASK_RCNN_DIR)
@@ -43,13 +43,13 @@ import time
 import scipy.misc
 import pytoml as toml
 
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 config = tf.ConfigProto()
 config.gpu_options.allow_growth = True
 if "@MASKFUSION_GPUS_MASKRCNN@" != "":
     config.gpu_options.visible_device_list="@MASKFUSION_GPUS_MASKRCNN@"
 session = tf.Session(config=config)
-from keras.backend.tensorflow_backend import set_session, clear_session, _SESSION
+from keras.backend import set_session, clear_session, _SESSION
 set_session(session)
 
 from samples.coco import coco
