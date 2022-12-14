@@ -41,7 +41,8 @@ highlight "Starting MaskFusion build script ..."
 echo "Available parameters:
         --install-packages
         --install-cuda
-        --build-dependencies"
+        --build-dependencies
+        --create-env"
 
 if [[ $* == *--install-packages* ]] ; then
   highlight "Installing system packages..."
@@ -81,7 +82,7 @@ if [[ $* == *--install-packages* ]] ; then
     libboost-all-dev \
     libfreetype6-dev
 
-    sudo -H pip3 install virtualenv
+    # sudo -H pip3 install virtualenv
 
   if [[ $DISTRIB_CODENAME == *"trusty"* ]] ; then
      # switch to g++-4.9
@@ -124,23 +125,40 @@ if [[ $* == *--install-cuda* ]] ; then
   fi
 fi # --install-cuda
 
+highlight "Activate conda environment..."
+conda activate maskfusion
 
-# Create virtual python environment and install packages
-highlight "Setting up virtual python environment..."
-virtualenv python-environment
-source python-environment/bin/activate
-pip3 install pip --upgrade
-pip3 install tensorflow-gpu==1.8.0
-pip3 install scikit-image
-pip3 install keras
-pip3 install IPython
-pip3 install h5py
-pip3 install cython
-pip3 install imgaug
-pip3 install opencv-python
-pip3 install pytoml
-ln -s `python -c "import numpy as np; print(np.__path__[0])"`/core/include/numpy Core/Segmentation/MaskRCNN || true # Provide numpy headers to C++
-
+if [[ $* == *--create-env* ]] ; then
+  # Create virtual python environment and install packages
+  highlight "Setting up virtual python environment with conda..."
+  # virtualenv python-environment
+  # source python-environment/bin/activate
+  conda create --name maskfusion python=3.9
+  conda activate maskfusion
+  # Install cuda
+  conda install -c conda-forge cudatoolkit=11.2 cudnn=8.1.0
+  export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CONDA_PREFIX/lib/
+  # The system paths will be automatically configured when you activate this conda environment.
+  mkdir -p $CONDA_PREFIX/etc/conda/activate.d
+  echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CONDA_PREFIX/lib/' > $CONDA_PREFIX/etc/conda/activate.d/env_vars.sh
+  # Get latest pip
+  pip install pip --upgrade
+  # Install tensorrt
+  pip install --upgrade tensorrt
+  # Install tensorflow
+  pip install tensorflow-gpu==2.9.3
+  python3 -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))" # Verify the installation
+  # Install other packages
+  pip install scikit-image
+  pip install h5py
+  pip install keras
+  pip install IPython
+  pip install cython
+  pip install imgaug
+  pip install opencv-python
+  pip install pytoml
+  ln -s `python -c "import numpy as np; print(np.__path__[0])"`/core/include/numpy Core/Segmentation/MaskRCNN || true # Provide numpy headers to C++
+fi # --install-cuda
 
 
 if [[ $* == *--build-dependencies* ]] ; then
@@ -307,7 +325,7 @@ cmake \
   -DBOOST_ROOT="${BOOST_ROOT}" \
   -DOpenCV_DIR="$(pwd)/../deps/opencv/build" \
   -DPangolin_DIR="$(pwd)/../deps/Pangolin/build/src" \
-  -DMASKFUSION_PYTHON_VE_PATH="$(pwd)/../python-environment" \
+  -DMASKFUSION_PYTHON_VE_PATH="/home/jingkun/anaconda3/envs/maskfusion" \ # Path to the conda env
   -DCUDA_HOST_COMPILER=/usr/bin/gcc \
   -DWITH_FREENECT2=OFF \
   ..
