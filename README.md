@@ -15,6 +15,40 @@ More information and the paper can be found [here](http://visual.cs.ucl.ac.uk/pu
 ## Building MaskFusion
 The script `build.sh` shows step-by-step how MaskFusion is built and which dependencies are required.
 The following CMake options are mandatory: `PYTHON_VE_PATH`, `MASKFUSION_MASK_RCNN_DIR` and it is recommended to set `MASKFUSION_GPUS_MASKRCNN` as well.
+### Building MaskFusion with Conda virtual environment
+Install packages and create an conda environment, build dependencies
+```
+./build.sh --install-packages --create-env --build-dependencies
+```
+You may expect some errors while building the dependencies. For the errors I encountered, here are my solutions.
+- cmake: /home/[user]/anaconda3/envs/maskfusion/lib/libstdc++.so.6: version `GLIBCXX_3.4.30' not found (required by cmake)
+    ```
+    conda install -c conda-forge gcc=12.1.0
+    ```
+- nvcc fatal   : Unsupported gpu architecture 'compute_30', while building **gSLICr**.
+    replace the following lines in `CMakeLists.txt`
+    ```
+    cuda_add_library(gSLICr_lib
+			${GSLICR_LIB}
+			NVTimer.h
+			OPTIONS -gencode arch=compute_30,code=compute_30)
+    ```
+    with
+    ```
+    cuda_add_library(gSLICr_lib
+			${GSLICR_LIB}
+			NVTimer.h
+			OPTIONS -gencode arch=compute_75,code=compute_75)
+    ```
+- Incompatiable tensorflow version (since the installed tensorflow is of version 2, but **MASK_RCNN** uses version 1), while building **Mask_RCNN**.
+    Some valueable suggestions can be found [here](https://github.com/matterport/Mask_RCNN/issues/1797#issuecomment-595111246). I used the [official upgrade command](https://www.tensorflow.org/guide/migrate/upgrade)
+    First navigate to the parent path of **Mask_RCNN** project `cd 'dep/`. Since I don't need another backup, I use the following command, according to the help instruction.
+    `tf_upgrade_v2 --intree Mask_RCNN --inplace --reportfile report.txt`
+    - AttributeError: module 'keras.engine' has no attribute 'Layer'.
+        Solved by replacing 'KE.' with 'KL.'  in `Mask_RCNN/mrcnn/model.py`
+    - ValueError: Tried to convert 'shape' to a tensor and failed. Error: None values not supported.
+        Solved by following the steps under this [issue](https://github.com/matterport/Mask_RCNN/issues/1070#issuecomment-740430758)
+
 
 ### CMake options:
 * `MASKFUSION_GPUS_MASKRCNN`: List of GPUs used by MaskRCNN, ideally disjunct from SLAM GPU
