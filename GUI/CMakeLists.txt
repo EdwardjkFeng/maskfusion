@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.6.0)
+cmake_minimum_required(VERSION 3.13)
 
 project(maskfusion-gui)
 
@@ -9,7 +9,8 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}")
 find_package(ZLIB REQUIRED)
 find_package(CUDA REQUIRED)
 find_package(OpenNI2 REQUIRED)
-find_package(OpenCV 3.1 REQUIRED )
+# find_package(OpenCV 3.1 REQUIRED )
+find_package(OpenCV REQUIRED )
 find_package(Boost 1.58.0 REQUIRED)
 
 option(WITH_FREENECT2 "Enable freenect support" OFF)

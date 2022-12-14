@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1.0)
+cmake_minimum_required(VERSION 3.13)
 
 # c++ version
 set(CMAKE_CXX_STANDARD 14)
@@ -42,7 +42,8 @@ link_directories(${GSLICR_DIR}/build)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/algorithms-cpp)
 
 # Pangolin
-find_package(Pangolin 0.4 REQUIRED)
+# find_package(Pangolin 0.4 REQUIRED)
+find_package(Pangolin REQUIRED)
 message("Pangolin_INCLUDE_DIRS: ${Pangolin_INCLUDE_DIRS}")
 include_directories(${Pangolin_INCLUDE_DIRS})
 

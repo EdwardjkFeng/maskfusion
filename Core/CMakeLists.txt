@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0.2)
+cmake_minimum_required(VERSION 3.13)
 
 # policy to export a different link interface
 cmake_policy(SET CMP0022 OLD)
@@ -12,8 +12,13 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}")
 ## External packages
 find_package(CUDA REQUIRED)
 find_package(SuiteSparse REQUIRED)
-find_package(OpenCV 3.1 REQUIRED)
+# find_package(OpenCV 3.1 REQUIRED)
+find_package(OpenCV REQUIRED)
 find_package(OpenMP)
+# find_package(PythonLibs)
+set(PYTHON_LIBRARIES "/home/jingkun/anaconda3/envs/maskfusion/lib/libpython3.9.so")
+set(PYTHON_INCLUDE_DIRS "/home/jingkun/anaconda3/envs/maskfusion/include/python3.9")
+find_package(PythonInterp)
 find_package(PythonLibs)
 
 if (OPENMP_FOUND)
@@ -73,7 +78,7 @@ file(GLOB cuda Cuda/*.cu)
 file(GLOB containers Cuda/containers/*.cpp)
 file(GLOB segmentation Segmentation/*.cpp Segmentation/MaskRCNN/*.cpp)
 
-set(CUDA_ARCH_BIN "50 52 61" CACHE STRING "Specify 'real' GPU arch to build binaries for, BIN(PTX) format is supported. Example: 1.3 2.1(1.3) or 13 21(13)")
+set(CUDA_ARCH_BIN "" CACHE STRING "Specify 'real' GPU arch to build binaries for, BIN(PTX) format is supported. Example: 1.3 2.1(1.3) or 13 21(13)")
 set(CUDA_ARCH_PTX "" CACHE STRING "Specify 'virtual' PTX arch to build PTX intermediate code for. Example: 1.0 1.2 or 10 12")
 
 SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR})
