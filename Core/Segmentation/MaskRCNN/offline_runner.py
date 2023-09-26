@@ -39,6 +39,7 @@ from helpers import *
 import time
 import pytoml as toml
 import scipy.misc
+import imageio.v2 as imageio
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-i", required=True, help="Input directory (all files are being processed)")
@@ -147,7 +148,7 @@ for idx, file_name in enumerate(file_names):
 
     print("Starting to work on frame", base_name)
 
-    image = scipy.misc.imread(os.path.join(IMAGE_DIR, file_name))
+    image = imageio.imread(os.path.join(IMAGE_DIR, file_name))
     h, w = image.shape[:2]
 
     results = model.detect([image], verbose=0)
