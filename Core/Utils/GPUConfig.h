@@ -107,6 +107,11 @@ class GPUConfig {
     rgbStepMap["Quadro K620M"] = std::pair<int, int>(128, 16);
     rgbResMap["Quadro K620M"] = std::pair<int, int>(448, 48);
     so3StepMap["Quadro K620M"] = std::pair<int, int>(32, 48);
+    
+    icpStepMap["NVIDIA GeForce RTX 3080 Ti"] = std::pair<int, int>(512, 32);
+    rgbStepMap["NVIDIA GeForce RTX 3080 Ti"] = std::pair<int, int>(160, 64);
+    rgbResMap["NVIDIA GeForce RTX 3080 Ti"] = std::pair<int, int>(128, 512);
+    so3StepMap["NVIDIA GeForce RTX 3080 Ti"] = std::pair<int, int>(240, 48);
 
     if (icpStepMap.find(dev) == icpStepMap.end()) {
       std::stringstream strs;
